@@ -1,0 +1,27 @@
+body, html {
+    height:100%;
+    width:100%;
+    margin:0;
+}
+body {
+    display: flex;
+}
+.loginContainer {
+    margin: auto;
+    max-width: 500px;
+    border-radius: 5px;
+    background-color: greenyellow;
+    align-self: center;
+}
+
+label, input[type=email], input[type=password], button {
+    margin: auto;
+}
+
+label {
+    width: 20%;
+}
+
+input[type=email], input[type=password] {
+    width: 80%;
+}

@@ -1,5 +1,4 @@
-import { auth } from "./Firebase"
-import { User, UserCredential, signInWithEmailAndPassword } from "firebase/auth";
+auth = path("./Firebase");
 
 if (window.location.href == "Index.html") {
     if (!tryToLoginStorage()) {
@@ -10,7 +9,7 @@ if (window.location.href == "Index.html") {
 }
 let button = document.getElementById("loginButton")
 let password = "";
-let user: User | undefined | null;
+let user;
 button?.onclick?.bind(tryToLogin)
 function tryToLogin() {
     let email = document.getElementById("email")?.nodeValue;
@@ -18,22 +17,22 @@ function tryToLogin() {
     let pass = document.getElementById("password")?.nodeValue;
     if (pass == undefined || pass == null) return;
     password = pass;
-    signInWithEmailAndPassword(auth, email, password).then(validateCredentials).catch(catchFailure);
+    auth.signInWithEmailAndPassword(auth, email, password).then(validateCredentials).catch(catchFailure);
 }
 
-function tryToLoginStorage() : boolean {
+function tryToLoginStorage() {
     let email = localStorage.getItem("userEmail");
     if (email == undefined || email == null) return false;
     let pass = localStorage.getItem("userPassword");
     if (pass == undefined || pass == null) return false;
-    signInWithEmailAndPassword(auth, email, pass).then(validateCredentials).catch(catchFailure);
+    auth.signInWithEmailAndPassword(auth, email, pass).then(validateCredentials).catch(catchFailure);
     if (user) {
         return true;
     }
     return false;
 }
 
-function validateCredentials(credentials : UserCredential) {
+function validateCredentials(credentials) {
     user = credentials.user;
     if (user) {
         window.location.href="MainPage.html";
@@ -42,12 +41,12 @@ function validateCredentials(credentials : UserCredential) {
     }
 }
 
-function catchFailure(error : any) {
-    const erC: any = error.code;
-    const erM: string = error.message;
+function catchFailure(error) {
+    const erC = error.code;
+    const erM = error.message;
     let errorArea = document.getElementById("error");
     if (errorArea == null) return;
     errorArea.textContent = erM;
 }
 
-export let finalUser: User | undefined | null = user;
+export let finalUser = user;

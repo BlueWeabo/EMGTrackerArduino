@@ -1,3 +1,2 @@
-/web/node_modules/*
-*.js
+/node_modules/*
 main.js.LICENSE.txt

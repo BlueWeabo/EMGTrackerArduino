@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
  
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -33,44 +33,27 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
-if (window.location.href == "Index.html") {
-    if (!tryToLoginStorage()) {
-        window.location.href = "Login.html";
-    } else {
-        window.location.href = "MainPage.html";
-    }
-}
-let user;
+const user = null;
 
 function tryToLoginStorage() {
     let email = localStorage.getItem("userEmail");
     if (email == undefined || email == null) return false;
     let pass = localStorage.getItem("userPassword");
     if (pass == undefined || pass == null) return false;
-    signInWithEmailAndPassword(auth, email, pass).then(validateCredentials).catch(catchFailure);
-    if (user) {
-        return true;
-    }
+    signInWithEmailAndPassword(auth, email, pass).then(validateCredentials);
+    console.log(user);
+    if (typeof user !== 'undefined' || user !== null) return true;
     return false;
 }
 
 function validateCredentials(credentials) {
+    console.log(credentials.user);
     user = credentials.user;
-    if (user) {
+    if (user && window.location.href != "MainPage.html") {
         window.location.href="MainPage.html"
     }
 }
 
-function catchFailure(error) {
-    const erC = error.code;
-    const erM = error.message;
-    let errorArea = document.getElementById("error");
-    if (errorArea == null) return;
-    errorArea.textContent = erM;
-}
-
 if (!tryToLoginStorage()) {
     window.location.href="Login.html";
-} else {
-    window.location.href="MainPage.html";
 }

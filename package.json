@@ -11,13 +11,12 @@
     "author": "BlueWeabo",
     "license": "LGPL-3.0-or-later",
     "devDependencies": {
-        "@types/node": "^20.9.1",
-        "typescript": "^5.3.2",
-        "webpack": "^5.89.0",
-        "webpack-cli": "^5.1.4"
+        "parcel": "^2.6.2"
     },
     "dependencies": {
-        "firebase": "^10.6.0"
+        "firebase": "^10.6.0",
+        "@cubejs-client/core": "^0.31.0",
+        "chart.js": "^4.0.0"
     },
     "type": "commonjs"
 }

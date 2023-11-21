@@ -9,14 +9,20 @@
 </head>
 <body>
     <div class="loginContainer">
-        <h2 class="loginHeader">Login</h2>
-        <p id="error"></p>
-        <label for="email">Email</label>
-        <input id="email" type="email" placeholder="example@health.bg">
-        <label for="password">Password</label>
-        <input id="password" type="password"/>
-        <button id="loginButton">Login</button>
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" >Login</button>
+        </form>
+        <p id="error-message" class="error-message"></p>
     </div>
-    <script src="./LoginScript.js"></script>
+    <script type="module" src="./LoginScript.js"></script>
 </body>
 </html>

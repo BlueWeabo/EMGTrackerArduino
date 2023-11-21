@@ -1,27 +1,69 @@
-body, html {
-    height:100%;
-    width:100%;
-    margin:0;
-}
 body {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f2f2f2;
+    font-family: Arial, sans-serif;
 }
-.loginContainer {
-    margin: auto;
-    max-width: 500px;
+
+.login-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: greenyellow;
-    align-self: center;
+    box-sizing: border-box;
+    font-size: 16px;
 }
 
-label, input[type=email], input[type=password], button {
-    margin: auto;
+button {
+    width: 100%;
+    background-color: #4caf50;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
 }
 
-label {
-    width: 20%;
+button:hover {
+    background-color: #45a049;
 }
 
-input[type=email], input[type=password] {
-    width: 80%;
+.login-container h2 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #333;
+}
+
+.login-container a {
+    color: #4caf50;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-container a:hover {
+    text-decoration: underline;
+}
+.error-message {
+    color: #ff0000;
+    margin-top: 10px;
+    font-size: 14px;
 }

@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
-
-let initializeApp = path("firebase/app");
-let auth_1 = path("firebase/auth");
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
+import { getDatabase } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-auth.js";
+ 
 
 // TODO: Add SDKs for Firebase products that you want to use
 
@@ -31,6 +31,9 @@ const firebaseConfig = {
 
 
 // Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
-export const app = initializeApp.initializeApp(firebaseConfig);
-export const auth = auth_1.getAuth(app);
+// Initialize Realtime Database and get a reference to the service
+const database = getDatabase(app);
+
+const auth = getAuth(app);

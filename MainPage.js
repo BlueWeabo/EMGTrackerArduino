@@ -1,5 +1,7 @@
-import { Chart } from "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js";
-import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+import "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js";
+import { getDatabase, ref, get, child, onValue } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
 const firebaseConfig = {
 	apiKey: "AIzaSyBFqO7PLGXYErIYjDGzoRqfRpyfILvoJRo",
 	authDomain: "emgtrackerarduino.firebaseapp.com",
@@ -13,25 +15,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
-const myChart = new Chart(document.getElementById('myChart'), {
-    type: "line",
-    data: {
-		labels: data.map(x=>x.count),
-		datasets: [{
-			axis: 'x',
-			label: '',
-			data: [12,121,12,121,542,45,435,453],
-			fill: false
-		}]
-	},
-    options: {}
-});
-const data = new Array(1000);
+
+const auth = getAuth(app);
+const user = null;
+const data = new Array(100);
 let read = 0;
 let lenght = 1000;
 function addData(chart, newData) {
     chart.data.datasets.forEach((dataset) => {
-		dataset.data = newData;
+		dataset.data.push(newData);
 	});
 	chart.update();
 }
@@ -43,33 +35,38 @@ function removeData(chart) {
 	});
 	chart.update();
 }
-let currRef;
+let unsub;
 function changeBiometrics(field) {
-	if (!currRef) {
-		currRef.off("value");
+	if (typeof unsub !== 'undefined') {
+		unsub();
 	}
-	currRef = ref('Muscle Biometrics/'+field);
-	currRef.on("value", (snapshot) => {
+	unsub = onValue(ref(database, `Muscle Biometrics/${field}/Current`), (snapshot) => {
 		let dat = snapshot.val();
 		data.shift();
-		data[999] = dat;
+		data[99] = dat;
 		addData(myChart, data);
+		//console.log(data);
 	});
 }
 
 function getAccountName(email) {
 	const usr = email.split('@')[0];
-	const user = usr.split('.').toString();
-	return user;
+	const user = usr.split('\.');
+	return `${capitalizeFirstLetter(user[0])} ${capitalizeFirstLetter(user[1])}`;
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function defineAuthority(email) {
-	const correctedEmail = email.replace(/./g, ' ');
+	const correctedEmail = email.replace(/\./g, ' ');
 	const dbRef = ref(database);
 	let auth = 0;
-	get(child(dbRef, `InternalAuthentication/`+correctedEmail)).then((snapshot) => {
+	//console.log(correctedEmail);
+	get(child(dbRef, `InternalAuthentication/${correctedEmail}`)).then((snapshot) => {
 		if (snapshot.exists()) {
-			console.log(snapshot.val());
+			//console.log(snapshot.val());
 			auth = snapshot.val();
 		} else {
 			console.log("No data available");
@@ -80,15 +77,12 @@ function defineAuthority(email) {
 	console.log(auth + "auth");
 	return auth;
 }
-const authLevel = 0;
 const email = localStorage.getItem("userEmail");
-authLevel = defineAuthority(email);
+const authLevel = defineAuthority(email);
 switch (authLevel) {
 	case 0:
-		document.location.href="Login.html";
-		break;
 	case 1:
-		let name = getAccountName(email);
+		const name = getAccountName(email);
 		changeBiometrics(name);
 		break;
 	case 2:
@@ -96,3 +90,40 @@ switch (authLevel) {
 	case 3:
 		break;
 }
+const myChart = new Chart(document.getElementById('myChart').getContext("2d"), {
+    type: "line",
+    data: {
+		labels: Array(100).fill(0).map((_, index)=> index),
+		datasets: [{
+			axis: 'x',
+			label: 'Data',
+			data: data,
+			fill: false,
+			backgroundColor: "rgba(75, 192, 192,0.4)",
+			borderColor: "rgba(75, 192, 192, 1)"
+		}]
+	},
+    options: {}
+});
+/*
+function tryToLoginStorage() {
+    let email = localStorage.getItem("userEmail");
+	console.log(email);
+    if (email == undefined || email == null) return false;
+    let pass = localStorage.getItem("userPassword");
+	console.log(pass);
+    if (pass == undefined || pass == null) return false;
+    signInWithEmailAndPassword(auth, email, pass).then(validateCredentials);
+    console.log(user);
+    if (typeof user !== 'undefined' || user !== null) return true;
+    return false;
+}
+
+function validateCredentials(credentials) {
+    console.log(credentials.user);
+    user = credentials.user;
+}
+
+if (!tryToLoginStorage()) {
+    window.location.href="Login.html";
+}*/

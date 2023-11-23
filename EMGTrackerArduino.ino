@@ -1,11 +1,14 @@
 #include <WiFi.h>
 #include <SoftwareSerial.h>
-const char* WIFI_NAME;
-const char* WIFI_PASSWORD;
+#include <Firebase.h>
+#include "time.h"
+#define WIFI_NAME "Redmi 9A"
+#define WIFI_PASSWORD = "42315678"
 #define DATABASE_URL "https://emgtrackerarduino-default-rtdb.europe-west1.firebasedatabase.app/"
 #define DATABASE_SECRET "OAUHcMrInFfygL6UHISgzwd4bsOajW7XYepeNfWR"
-#define CLIENT "Ilia Iliev"
-#define BIOMETRIC_DATA "/Muscle Biometrics"
+#define CLIENT "/Muscle Biometrics/Ilia Iliev"
+#define MONDAY "Monday"
+#define SUNDAY "Sunday"
 // Define the Firebase Data object
 FirebaseData fbdo;
 
@@ -15,26 +18,14 @@ FirebaseAuth auth;
 // Define the FirebaseConfig data for config data
 FirebaseConfig config;
 
-char* biometricData;
+const char* ntpServer = "pool.ntp.org";
+const long gmtOffset_sec = 7200;
+const int daylightOffset_sec = 3600;
+
 int EMGSensor;
+int* bigData;
 void setup() {
   Serial.begin(9600);
-  initConnection();
-  initFirebase();
-}
-int timer 0;
-void loop() {
-  if (timer >= 1000) {
-    timer = 0;
-    Firebase.set(fbdo, "/" + CLIENT + BIOMETRIC_DATA, biometricData);
-    biometricData = "";
-  }
-  int val = analogRead(EMGSensor);
-  biometricData = biometricData + ((char)val);
-  timer++;
-}
-
-void initConnection() {
   WiFi.begin(WIFI_NAME, WIFI_PASSWORD);
   Serial.print("Connecting to Wi-Fi");
   while (WiFi.status() != WL_CONNECTED)
@@ -46,9 +37,6 @@ void initConnection() {
   Serial.print("Connected with IP: ");
   Serial.println(WiFi.localIP());
   Serial.println();
-}
-
-void initFirebase() {
   config.cert.file = "/gtsr1.pem";
   config.database_url = DATABASE_URL;
   config.signer.tokens.legacy_token = DATABASE_SECRET;
@@ -62,4 +50,56 @@ void initFirebase() {
 
   /* Initialize the library with the Firebase authen and config */
   Firebase.begin(&config, &auth);
+  // Init and get the time
+  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+  printLocalTime();
+}
+void loop() {
+  int val = random(1024); //analogRead(EMGSensor);
+  Firebase.set(fbdo, CLIENT, val);
+  printLocalTime();
+}
+
+void printLocalTime(){
+  struct tm timeinfo;
+  if(!getLocalTime(&timeinfo)){
+    Serial.println("Failed to obtain time");
+    return;
+  }
+//  Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+//  Serial.print("Day of week: ");
+//  Serial.println(&timeinfo, "%A");
+//  Serial.print("Month: ");
+//  Serial.println(&timeinfo, "%B");
+//  Serial.print("Day of Month: ");
+//  Serial.println(&timeinfo, "%d");
+//  Serial.print("Year: ");
+//  Serial.println(&timeinfo, "%Y");
+//  Serial.print("Hour: ");
+//  Serial.println(&timeinfo, "%H");
+//  Serial.print("Hour (12 hour format): ");
+//  Serial.println(&timeinfo, "%I");
+//  Serial.print("Minute: ");
+//  Serial.println(&timeinfo, "%M");
+//  Serial.print("Second: ");
+//  Serial.println(&timeinfo, "%S");
+//
+//  Serial.println("Time variables");
+  char timeHour[3];
+  strftime(timeHour,3, "%H", &timeinfo);
+//  Serial.println(timeHour);
+  char timeWeekDay[10];
+  strftime(timeWeekDay,10, "%A", &timeinfo);
+//  Serial.println(timeWeekDay);
+//  Serial.println();
+
+  if (timeWeekDay == MONDAY) {
+    if (timeHour == '2') {
+      
+    }
+  }
+  if (timeWeekDay == SUNDAY) {
+    
+  }
+
 }

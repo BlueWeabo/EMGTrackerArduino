@@ -3,10 +3,9 @@
 #include <Firebase.h>
 #include "time.h"
 #define WIFI_NAME "Redmi 9A"
-#define WIFI_PASSWORD = "42315678"
+#define WIFI_PASSWORD "42315678"
 #define DATABASE_URL "https://emgtrackerarduino-default-rtdb.europe-west1.firebasedatabase.app/"
 #define DATABASE_SECRET "OAUHcMrInFfygL6UHISgzwd4bsOajW7XYepeNfWR"
-#define CLIENT "/Muscle Biometrics/Ilia Iliev"
 #define MONDAY "Monday"
 #define SUNDAY "Sunday"
 // Define the Firebase Data object
@@ -22,6 +21,17 @@ const char* ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 7200;
 const int daylightOffset_sec = 3600;
 
+const char* CLIENT = "/Muscle Biometrics/Ilia Iliev/";
+const char* CURRENT = "Current";
+const char* MONDAY_HOUR2 = "Monday/Hour2";
+const char* MONDAY_HOUR10 = "Monday/Hour10";
+const char* MONDAY_HOUR17 = "Monday/Hour17";
+const char* SUNDAY_HOUR2 = "Sunday/Hour2";
+const char* SUNDAY_HOUR10 = "Sunday/Hour10";
+const char* SUNDAY_HOUR17 = "Sunday/Hour17";
+char timeWeekDay[10];
+char timeMin[3];
+char timeHour[3];
 int EMGSensor;
 int* bigData;
 void setup() {
@@ -54,52 +64,69 @@ void setup() {
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
   printLocalTime();
 }
+boolean start = false;
+boolean done = false;
 void loop() {
   int val = random(1024); //analogRead(EMGSensor);
-  Firebase.set(fbdo, CLIENT, val);
+  char* thing = *CLIENT + *CURRENT;
+  Firebase.set(fbdo, thing, val);
   printLocalTime();
+  if (timeWeekDay == MONDAY) {
+    if ((timeHour == "2" || timeHour == "10" || timeHour == "17") && !done) {
+      start= true;
+    }
+    if ((timeHour == "3" || timeHour == "11" || timeHour == "18") && done) {
+      start = false;
+      done = false;
+    }
+  }
+  if (timeWeekDay == SUNDAY) {
+    if ((timeHour == "2" || timeHour == "10" || timeHour == "17") && !done) {
+      start= true;
+    }
+    if ((timeHour == "3" || timeHour == "11" || timeHour == "18") && done) {
+      start = false;
+      done = false;
+    }
+  }
+  if (start && !done) {
+    if (timeMin == "1" || timeMin == "2") {
+      char* magic;
+      if (timeWeekDay == MONDAY) {
+        if (timeHour == "2") {
+          *magic = *CLIENT + *MONDAY_HOUR2;
+        }
+        if (timeHour == "10") {
+          *magic = *CLIENT + *MONDAY_HOUR10;
+        }
+        if (timeHour == "17") {
+          *magic = *CLIENT + *MONDAY_HOUR17;
+        }
+      }
+      if (timeWeekDay == SUNDAY) {
+        if (timeHour == "2") {
+          *magic = *CLIENT + *SUNDAY_HOUR2;
+        }
+        if (timeHour == "10") {
+          *magic = *CLIENT + *SUNDAY_HOUR10;
+        }
+        if (timeHour == "17") {
+          *magic = *CLIENT + *SUNDAY_HOUR17;
+        }
+      }
+      Firebase.set(fbdo, *magic, *bigData);
+      done = true;
+    }
+    *bigData += val;
+  }
 }
-
 void printLocalTime(){
   struct tm timeinfo;
   if(!getLocalTime(&timeinfo)){
     Serial.println("Failed to obtain time");
     return;
   }
-//  Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
-//  Serial.print("Day of week: ");
-//  Serial.println(&timeinfo, "%A");
-//  Serial.print("Month: ");
-//  Serial.println(&timeinfo, "%B");
-//  Serial.print("Day of Month: ");
-//  Serial.println(&timeinfo, "%d");
-//  Serial.print("Year: ");
-//  Serial.println(&timeinfo, "%Y");
-//  Serial.print("Hour: ");
-//  Serial.println(&timeinfo, "%H");
-//  Serial.print("Hour (12 hour format): ");
-//  Serial.println(&timeinfo, "%I");
-//  Serial.print("Minute: ");
-//  Serial.println(&timeinfo, "%M");
-//  Serial.print("Second: ");
-//  Serial.println(&timeinfo, "%S");
-//
-//  Serial.println("Time variables");
-  char timeHour[3];
   strftime(timeHour,3, "%H", &timeinfo);
-//  Serial.println(timeHour);
-  char timeWeekDay[10];
+  strftime(timeMin,3,"%M", &timeinfo);
   strftime(timeWeekDay,10, "%A", &timeinfo);
-//  Serial.println(timeWeekDay);
-//  Serial.println();
-
-  if (timeWeekDay == MONDAY) {
-    if (timeHour == '2') {
-      
-    }
-  }
-  if (timeWeekDay == SUNDAY) {
-    
-  }
-
 }

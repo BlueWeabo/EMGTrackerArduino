@@ -33,13 +33,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
-if (window.location.href == "Index.html") {
-    if (!tryToLoginStorage()) {
-        window.location.href = "Login.html";
-    } else {
-        window.location.href = "MainPage.html";
-    }
-}
 let password = "";
 let user;
 document.getElementById("loginForm").addEventListener("submit", 
@@ -56,7 +49,7 @@ function(event) {
 function validateCredentials(credentials) {
     user = credentials.user;
     if (user) {
-        window.location.href="MainPage.html";
+        window.location.href="mainPage.html";
         localStorage.setItem("userEmail", user.email != null ? user.email : "");
         localStorage.setItem("userPassword", password);
     }

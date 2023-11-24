@@ -49,11 +49,11 @@ function tryToLoginStorage() {
 function validateCredentials(credentials) {
     console.log(credentials.user);
     user = credentials.user;
-    if (user && window.location.href != "MainPage.html") {
-        window.location.href="MainPage.html"
+    if (user && window.location.href != "mainPage.html") {
+        window.location.href="mainPage.html"
     }
 }
 
 if (!tryToLoginStorage()) {
-    window.location.href="Login.html";
+    window.location.href="login.html";
 }

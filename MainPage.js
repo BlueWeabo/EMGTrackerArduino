@@ -17,12 +17,10 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 const auth = getAuth(app);
-let user = null;
+const authLevel = localStorage.getItem("auth");
 const data = new Array(100);
-let read = 0;
-let lenght = 1000;
 function addData(chart, newData) {
-    chart.data.datasets.forEach((dataset) => {
+	chart.data.datasets.forEach((dataset) => {
 		dataset.data.push(newData);
 	});
 	chart.update();
@@ -49,43 +47,12 @@ function getAccountName(email) {
 }
 
 function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function defineAuthority(email) {
-	const correctedEmail = email.replace(/\./g, ' ');
-	const dbRef = ref(database);
-	let auth = 0;
-	//console.log(correctedEmail);
-	get(child(dbRef, `InternalAuthentication/${correctedEmail}`)).then((snapshot) => {
-		if (snapshot.exists()) {
-			//console.log(snapshot.val());
-			auth = snapshot.val();
-		} else {
-			console.log("No data available");
-		}
-	}).catch((error) => {
-		console.error(error);
-	});
-	console.log(auth + "auth");
-	return auth;
-}
-const email = localStorage.getItem("userEmail");
-const authLevel = defineAuthority(email);
-switch (authLevel) {
-	case 0:
-	case 1:
-		const name = getAccountName(email);
-		changeBiometrics(name);
-		break;
-	case 2:
-		break;
-	case 3:
-		break;
-}
 const myChart = new Chart(document.getElementById('myChart').getContext("2d"), {
-    type: "line",
-    data: {
+	type: "line",
+	data: {
 		labels: Array(100).fill(0).map((_, index)=> index),
 		datasets: [{
 			axis: 'x',
@@ -96,27 +63,18 @@ const myChart = new Chart(document.getElementById('myChart').getContext("2d"), {
 			borderColor: "rgba(75, 192, 192, 1)"
 		}]
 	},
-    options: {}
+	options: {}
 });
-/*
-function tryToLoginStorage() {
-    let email = localStorage.getItem("userEmail");
-	console.log(email);
-    if (email == undefined || email == null) return false;
-    let pass = localStorage.getItem("userPassword");
-	console.log(pass);
-    if (pass == undefined || pass == null) return false;
-    signInWithEmailAndPassword(auth, email, pass).then(validateCredentials);
-    console.log(user);
-    if (typeof user !== 'undefined' || user !== null) return true;
-    return false;
-}
 
-function validateCredentials(credentials) {
-    console.log(credentials.user);
-    user = credentials.user;
-}
+document.getElementById("logout").addEventListener("click",
+function(event) {
+	signOut(auth).then(() => {
+		localStorage.setItem("userEmail", "");
+		localStorage.setItem("userPassword", "");
+		localStorage.setItem("auth", -1);
+		window.location.href = "login.html";
+	}).catch((error)=>{}) // do nothing on fail i guess
+});
 
-if (!tryToLoginStorage()) {
-    window.location.href="Login.html";
-}*/
+const email = localStorage.getItem("userEmail");
+changeBiometrics(getAccountName(email));

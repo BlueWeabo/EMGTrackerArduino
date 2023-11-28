@@ -50,13 +50,33 @@ function validateCredentials(credentials) {
     user = credentials.user;
     if (user) {
         window.location.href="mainPage.html";
-        localStorage.setItem("userEmail", user.email != null ? user.email : "");
+        localStorage.setItem("userEmail", user.email != null && typeof user.email !== 'undefined' ? user.email : "");
         localStorage.setItem("userPassword", password);
+        const authLevel = defineAuthority(user.email);
+        localStorage.setItem("auth", authLevel);
+	    switch (authLevel) {
+	    	case 0:
+	    		window.location.href="mainPage.html";
+	    		break;
+	    	case 1:
+	    		window.location.href="mainPageDoc.html";
+	    		break;
+	    	case 2:
+	    		break;
+	    }
     }
 }
 
 function catchFailure(error) {
     document.getElementById("error-message").textContent = error.message;
 }
-
-export let finalUser = user;
+function defineAuthority(email) {
+	let auth = 0;
+	if (email.includes("doc")) {
+		auth = 1;
+	} else if (email.includes("admin")) {
+		auth = 2;
+	}
+	console.log(auth + "auth");
+	return auth;
+}

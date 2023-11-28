@@ -1,5 +1,5 @@
 import "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js";
-import { getDatabase, ref, get, child, onValue } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+import { getDatabase, ref, set, child, onValue } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
 const firebaseConfig = {
@@ -15,7 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
-
+const authLevel = localStorage.getItem("auth");
 const auth = getAuth(app);
 let user = null;
 const data = new Array(100);
@@ -32,6 +32,7 @@ let unsub;
 function changeBiometrics(field) {
 	if (typeof unsub !== 'undefined') {
 		unsub();
+		data.fill(0);
 	}
 	unsub = onValue(ref(database, `Muscle Biometrics/${field}/Current`), (snapshot) => {
 		let dat = snapshot.val();
@@ -45,44 +46,13 @@ function changeBiometrics(field) {
 function getAccountName(email) {
 	const usr = email.split('@')[0];
 	const user = usr.split('\.');
-	return `${capitalizeFirstLetter(user[0])} ${capitalizeFirstLetter(user[1])}`;
+	return ''+capitalizeFirstLetter(user[0])+' '+capitalizeFirstLetter(user[1]);
 }
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function defineAuthority(email) {
-	const correctedEmail = email.replace(/\./g, ' ');
-	const dbRef = ref(database);
-	let auth = 0;
-	//console.log(correctedEmail);
-	get(child(dbRef, `InternalAuthentication/${correctedEmail}`)).then((snapshot) => {
-		if (snapshot.exists()) {
-			//console.log(snapshot.val());
-			auth = snapshot.val();
-		} else {
-			console.log("No data available");
-		}
-	}).catch((error) => {
-		console.error(error);
-	});
-	console.log(auth + "auth");
-	return auth;
-}
-const email = localStorage.getItem("userEmail");
-const authLevel = defineAuthority(email);
-switch (authLevel) {
-	case 0:
-	case 1:
-		const name = getAccountName(email);
-		changeBiometrics(name);
-		break;
-	case 2:
-		break;
-	case 3:
-		break;
-}
 const myChart = new Chart(document.getElementById('myChart').getContext("2d"), {
     type: "line",
     data: {
@@ -98,25 +68,48 @@ const myChart = new Chart(document.getElementById('myChart').getContext("2d"), {
 	},
     options: {}
 });
-/*
-function tryToLoginStorage() {
-    let email = localStorage.getItem("userEmail");
-	console.log(email);
-    if (email == undefined || email == null) return false;
-    let pass = localStorage.getItem("userPassword");
-	console.log(pass);
-    if (pass == undefined || pass == null) return false;
-    signInWithEmailAndPassword(auth, email, pass).then(validateCredentials);
-    console.log(user);
-    if (typeof user !== 'undefined' || user !== null) return true;
-    return false;
-}
-
-function validateCredentials(credentials) {
-    console.log(credentials.user);
-    user = credentials.user;
-}
-
-if (!tryToLoginStorage()) {
-    window.location.href="Login.html";
-}*/
+document.getElementById('containerNewPatient').style.display="none";
+document.getElementById("checkPatient").addEventListener("click", 
+function(event) {
+    let email =  document.getElementById("patientEmail").value;
+	changeBiometrics(getAccountName(email));
+});
+document.getElementById("patientTab").addEventListener("click",
+function(event) {
+	document.getElementById("containerPatient").style.display="block";
+	document.getElementById("containerNewPatient").style.display="none";
+});
+document.getElementById("newPatient").addEventListener("click",
+function(event) {
+	document.getElementById("containerPatient").style.display="none";
+	document.getElementById("containerNewPatient").style.display="block";
+});
+document.getElementById("createPatient").addEventListener("click",
+function(event) {
+	let email = document.getElementById("newPatientEmail").value;
+	let pass = document.getElementById("newPatientPassword").value;
+	let passConfirm = document.getElementById("newPatientPasswordConfirm").value;
+	if (passConfirm !== pass) {
+		document.getElementById("error").value = "Not the same password. Try again";
+		return;
+	}
+	let obj = {};
+	obj['Muscle Biometrics.'+getAccountName(email)] = {
+		Current:0,
+		Monday:{
+			Hour2:[1,2,3,4,5,6,7,8,9],
+			Hour10:[1,2,3,4,5,6,7,8,9],
+			Hour17:[1,2,3,4,5,6,7,8,9]
+		},
+		Sunday:{
+			Hour2:[1,2,3,4,5,6,7,8,9],
+			Hour10:[1,2,3,4,5,6,7,8,9],
+			Hour17:[1,2,3,4,5,6,7,8,9]
+		}
+	};
+	console.log(obj);
+	console.log(JSON.stringify(obj));
+	console.log(JSON.parse(JSON.stringify(obj)));	
+	set(ref(database, '/', obj))
+	document.getElementById("error").value = "Success";
+})

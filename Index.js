@@ -33,27 +33,50 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
-const user = null;
+let user = null;
 
 function tryToLoginStorage() {
-    let email = localStorage.getItem("userEmail");
-    if (email == undefined || email == null) return false;
-    let pass = localStorage.getItem("userPassword");
-    if (pass == undefined || pass == null) return false;
-    signInWithEmailAndPassword(auth, email, pass).then(validateCredentials);
-    console.log(user);
-    if (typeof user !== 'undefined' || user !== null) return true;
-    return false;
+	let email = localStorage.getItem("userEmail");
+	if (email == undefined || email == null) return false;
+	let pass = localStorage.getItem("userPassword");
+	if (pass == undefined || pass == null) return false;
+	signInWithEmailAndPassword(auth, email, pass).then(validateCredentials);
+	console.log(user);
+	if (typeof user !== 'undefined' || user !== null) return true;
+	return false;
 }
 
 function validateCredentials(credentials) {
-    console.log(credentials.user);
-    user = credentials.user;
-    if (user && window.location.href != "mainPage.html") {
-        window.location.href="mainPage.html"
-    }
+	console.log(credentials.user);
+	user = credentials.user;
 }
 
+function defineAuthority(email) {
+	let auth = 0;
+	if (email.includes("doc")) {
+		auth = 1;
+	} else if (email.includes("admin")) {
+		auth = 2;
+	}
+	console.log(auth + "auth");
+	return auth;
+}
+
+
 if (!tryToLoginStorage()) {
-    window.location.href="login.html";
+	window.location.href="login.html";
+} else {
+	const email = localStorage.getItem("userEmail");
+	const authLevel = defineAuthority(email);
+	localStorage.setItem("auth", authLevel);
+	switch (authLevel) {
+		case 0:
+			window.location.href="mainPage.html";
+			break;
+		case 1:
+			window.location.href="mainPageDoc.html";
+			break;
+		case 2:
+			break;
+	}
 }

@@ -1,7 +1,7 @@
 import "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js";
 import { getDatabase, ref, get, child, onValue } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
 const firebaseConfig = {
 	apiKey: "AIzaSyBFqO7PLGXYErIYjDGzoRqfRpyfILvoJRo",
 	authDomain: "emgtrackerarduino.firebaseapp.com",
@@ -26,6 +26,12 @@ function addData(chart, newData) {
 	chart.update();
 }
 
+if (authLevel != 0) {
+	localStorage.setItem("userEmail", "");
+	localStorage.setItem("userPassword", "");
+	localStorage.setItem("auth", -1);
+	window.location.href = "login.html";
+}
 let unsub;
 function changeBiometrics(field) {
 	if (typeof unsub !== 'undefined') {
@@ -73,7 +79,7 @@ function(event) {
 		localStorage.setItem("userPassword", "");
 		localStorage.setItem("auth", -1);
 		window.location.href = "login.html";
-	}).catch((error)=>{}) // do nothing on fail i guess
+	}).catch((error)=>{}); // do nothing on fail i guess
 });
 
 const email = localStorage.getItem("userEmail");

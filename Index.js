@@ -52,10 +52,12 @@ function validateCredentials(credentials) {
 }
 
 function defineAuthority(email) {
-	let auth = 0;
-	if (email.includes("doc")) {
+	let auth = -1;
+	if (email.includes("@health")) {
+		auth = 0;
+	} if (email.includes("@doc")) {
 		auth = 1;
-	} else if (email.includes("admin")) {
+	} else if (email.includes("@admin")) {
 		auth = 2;
 	}
 	console.log(auth + "auth");
@@ -77,6 +79,10 @@ if (!tryToLoginStorage()) {
 			window.location.href="mainPageDoc.html";
 			break;
 		case 2:
+			window.location.href="mainPageAdmin.html";
+			break;
+		default:
+			window.location.href="login.html";
 			break;
 	}
 }

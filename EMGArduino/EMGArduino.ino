@@ -17,7 +17,7 @@ FirebaseAuth auth;
 FirebaseConfig config;
 
 const char* ntpServer = "pool.ntp.org";
-const long gmtOffset_sec = 7200;
+const long gmtOffset_sec = 2 * 3600;
 const int daylightOffset_sec = 0;
 
 const String CLIENT = "/Muscle Biometrics/Ilia Iliev/Current";
@@ -27,11 +27,12 @@ const String MONDAY_HOUR17 = "/Muscle Biometrics/Ilia Iliev/Monday/Hour17/";
 const String SUNDAY_HOUR2 = "/Muscle Biometrics/Ilia Iliev/Sunday/Hour2/";
 const String SUNDAY_HOUR10 = "/Muscle Biometrics/Ilia Iliev/Sunday/Hour10/";
 const String SUNDAY_HOUR17 = "/Muscle Biometrics/Ilia Iliev/Sunday/Hour17/";
-char timeWeekDay[10];
+char timeWeekDay[10] = "Monday";
 char timeMin[3];
-char timeHour[3];
-int EMGSensor = 21;
+char timeHour[3] = "17";
+int EMGSensor = 35;
 void setup() {
+  pinMode(EMGSensor, INPUT);
   Serial.begin(9600);
   WiFi.begin(WIFI_NAME, WIFI_PASSWORD);
   Serial.print("Connecting to Wi-Fi");
@@ -59,6 +60,14 @@ void setup() {
   Firebase.begin(&config, &auth);
   // Init and get the time
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+  while (time(nullptr) < 1510592825)
+  {
+    delay(1);
+  }
+
+  time_t now = time(nullptr);
+  struct tm* t = localtime(&now);
+  Serial.println(t, "%A, %B %d %Y %H:%M:%S");
   printLocalTime();
 }
 boolean start = false;
@@ -89,7 +98,7 @@ void loop() {
     }
   }
   if (start && !done) {
-    if (timeMin == "1" || timeMin == "2") {
+    if (timeMin == "1" || timeMin == "2" || timeMin == "43") {
       done = true;
     }
     if (timeWeekDay == MONDAY) {
@@ -122,7 +131,7 @@ void printLocalTime(){
     Serial.println("Failed to obtain time");
     return;
   }
-  strftime(timeHour,3, "%H", &timeinfo);
+  //strftime(timeHour,3, "%H", &timeinfo);
   strftime(timeMin,3,"%M", &timeinfo);
-  strftime(timeWeekDay,10, "%A", &timeinfo);
+  //strftime(timeWeekDay,10, "%A", &timeinfo);
 }

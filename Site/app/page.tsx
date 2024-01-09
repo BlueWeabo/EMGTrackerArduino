@@ -1,11 +1,14 @@
+'use client'
+
 import Image from 'next/image'
 import { initializeApp } from '@firebase/app';
 import { getDatabase } from '@firebase/database';
 import { getAuth } from '@firebase/auth';
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
-import { useState } from "react";
+import { Dispatch, FormEvent, FormEventHandler, useState } from "react";
 import { Line } from 'react-chartjs-2';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 const firebaseConfig = {
 
   apiKey: "AIzaSyBFqO7PLGXYErIYjDGzoRqfRpyfILvoJRo",
@@ -30,17 +33,31 @@ const database = getDatabase(app);
 // Initialize authentication
 const auth = getAuth(app);
 
-function Login() {
+function Login({setLoginState}) {
+  function handleSubmit(event : FormEvent) {
+    event.preventDefault();
+    const {email, password} = document.forms[0];
+    signInWithEmailAndPassword(auth,email.value,password.value).then((userCred)=>{
+      const user = userCred.user;
+      if (user) {
+        setLoginState(true);
+      }
+    }).catch((reason)=>{
+      setLoginState(false);
+    });
+    return true;
+  }
+
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit}>
             <div className="input-group">
-                <label >Email:</label>
-                <input type="text" name="email" required/>
+                <label htmlFor='email'>Email:</label>
+                <input type="text" id="email" name="email" required/>
             </div>
             <div className="input-group">
-                <label >Password:</label>
-                <input type="password" name="password" required/>
+                <label htmlFor='password'>Password:</label>
+                <input type="password" id="password" name="password" required/>
             </div>
             <button type="submit" >Login</button>
       </form>
@@ -48,26 +65,32 @@ function Login() {
   )
 }
 
-function Chart({ chartData }) {
+function Menu() {
+  return (
+    <>
+
+    </>
+  )
+}
+
+function LChart({ chartData }) {
 
   return (
   <>
     <Line
       data={chartData}
-      options={{
-        
-      }}
+      options={{}}
     >
-
     </Line>
   </>
   )
 }
 
 export default function Home() {
+  const [isLoggedIn, setLoggedIn] = useState(false)
   return (
     <>
-      <Login />
+      {isLoggedIn ? <Menu /> : <Login setLoginState={setLoggedIn}/>}
     </>
   )
 }

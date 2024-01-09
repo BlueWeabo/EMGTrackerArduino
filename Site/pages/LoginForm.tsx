@@ -1,9 +1,11 @@
+'use client'
 import { Auth, signInWithEmailAndPassword } from "firebase/auth";
 import { Dispatch, FormEvent, SetStateAction } from "react";
 
-function Login({setLoginState, auth}: {setLoginState: Dispatch<SetStateAction<boolean>>,auth: Auth}) {
+function Login({setLoginState, auth}: {setLoginState: Dispatch<SetStateAction<boolean>>,auth: Auth | null}) {
   function handleSubmit(event : FormEvent) {
     event.preventDefault();
+    if (auth === null) return;
     const {email, password} = document.forms[0];
     signInWithEmailAndPassword(auth,email.value,password.value).then((userCred)=>{
       const user = userCred.user;
@@ -13,7 +15,6 @@ function Login({setLoginState, auth}: {setLoginState: Dispatch<SetStateAction<bo
     }).catch((reason)=>{
       setLoginState(false);
     });
-    return true;
   }
 
   return (

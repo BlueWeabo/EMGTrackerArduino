@@ -9,6 +9,7 @@ import { CategoryScale } from "chart.js";
 import { Dispatch, FormEvent, FormEventHandler, useState } from "react";
 import { Line } from 'react-chartjs-2';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import Login from '@/pages/LoginForm';
 const firebaseConfig = {
 
   apiKey: "AIzaSyBFqO7PLGXYErIYjDGzoRqfRpyfILvoJRo",
@@ -33,64 +34,21 @@ const database = getDatabase(app);
 // Initialize authentication
 const auth = getAuth(app);
 
-function Login({setLoginState}) {
-  function handleSubmit(event : FormEvent) {
-    event.preventDefault();
-    const {email, password} = document.forms[0];
-    signInWithEmailAndPassword(auth,email.value,password.value).then((userCred)=>{
-      const user = userCred.user;
-      if (user) {
-        setLoginState(true);
-      }
-    }).catch((reason)=>{
-      setLoginState(false);
-    });
-    return true;
-  }
-
-  return (
-    <>
-      <form onSubmit={handleSubmit}>
-            <div className="input-group">
-                <label htmlFor='email'>Email:</label>
-                <input type="text" id="email" name="email" required/>
-            </div>
-            <div className="input-group">
-                <label htmlFor='password'>Password:</label>
-                <input type="password" id="password" name="password" required/>
-            </div>
-            <button type="submit" >Login</button>
-      </form>
-    </>
-  )
-}
 
 function Menu() {
   return (
     <>
-
+      <div>Successfully Logged In</div>
     </>
   )
 }
 
-function LChart({ chartData }) {
-
-  return (
-  <>
-    <Line
-      data={chartData}
-      options={{}}
-    >
-    </Line>
-  </>
-  )
-}
 
 export default function Home() {
   const [isLoggedIn, setLoggedIn] = useState(false)
   return (
     <>
-      {isLoggedIn ? <Menu /> : <Login setLoginState={setLoggedIn}/>}
+      {isLoggedIn ? <Menu /> : <Login setLoginState={setLoggedIn} auth={auth}/>}
     </>
   )
 }

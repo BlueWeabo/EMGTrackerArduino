@@ -2,6 +2,8 @@ import { Database } from "firebase/database";
 import { Dispatch, useState } from "react";
 import { Line } from "react-chartjs-2";
 
+const labels = Array.prototype.fill(0,0,1000).map((val,i,arr)=>(i+1).toString);
+const data 
 function LineChart({ chartData } : {chartData: {labels:string[], datasets:[]}}) {
   return (
   <>
@@ -15,13 +17,9 @@ function LineChart({ chartData } : {chartData: {labels:string[], datasets:[]}}) 
 }
 
 function BiometricChart({database}: {database: Database}) {
-    const [data, setData]: [number[], Dispatch<number[]>] = useState(Array.prototype.fill(0,0,1000));
     return (
         <>
-            <LineChart chartData={
-                labels=data.map((val, i, arr)=>i.toString()),
-
-            }></LineChart>
+            <LineChart chartData={data}></LineChart>
         </>
     )
 }

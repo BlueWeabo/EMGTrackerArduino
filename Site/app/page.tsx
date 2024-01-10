@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 'use client'
+=======
+>>>>>>> 56f32d0 (pain)
 import Image from 'next/image'
 import { initializeApp } from '@firebase/app';
 import { getDatabase } from '@firebase/database';

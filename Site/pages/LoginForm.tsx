@@ -2,7 +2,7 @@
 import { Auth, signInWithEmailAndPassword } from "firebase/auth";
 import { Dispatch, FormEvent, SetStateAction } from "react";
 
-function Login({setLoginState, auth}: {setLoginState: Dispatch<SetStateAction<boolean>>,auth: Auth | null}) {
+function Login({auth}: {auth: Auth | null}) {
   function handleSubmit(event : FormEvent) {
     event.preventDefault();
     if (auth === null) return;
@@ -10,16 +10,15 @@ function Login({setLoginState, auth}: {setLoginState: Dispatch<SetStateAction<bo
     signInWithEmailAndPassword(auth,email.value,password.value).then((userCred)=>{
       const user = userCred.user;
       if (user) {
-        setLoginState(true);
       }
     }).catch((reason)=>{
-      setLoginState(false);
     });
   }
 
   return (
     <>
       <form onSubmit={handleSubmit}>
+            <label className="error-message" id="error"></label>
             <div className="input-group">
                 <label htmlFor='email'>Email:</label>
                 <input type="text" id="email" name="email" required/>

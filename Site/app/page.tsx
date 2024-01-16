@@ -1,14 +1,10 @@
-<<<<<<< HEAD
-'use client'
-=======
->>>>>>> 56f32d0 (pain)
 import Image from 'next/image'
 import { initializeApp } from '@firebase/app';
 import { getDatabase } from '@firebase/database';
 import { getAuth } from '@firebase/auth';
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
-import { Dispatch, FormEvent, FormEventHandler, useState } from "react";
+import { Dispatch, FormEvent, FormEventHandler} from "react";
 import { Line } from 'react-chartjs-2';
 import { Auth, signInWithEmailAndPassword } from 'firebase/auth';
 import Login from '@/pages/LoginForm';
@@ -50,13 +46,10 @@ function Menu() {
 
 
 export default function Home() {
-  const [isLoggedIn, setLoggedIn] = useState(false)
-  const [database, setDatabase] = useState<Database | null>(null)
-  const [auth, setAuth] = useState<Auth | null>(null);
   
   return (
     <>
-      {isLoggedIn ? <Menu /> : <Login setLoginState={setLoggedIn} auth={auth}/>}
+      <Login auth={auth}/>
     </>
   )
 }

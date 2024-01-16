@@ -1,9 +1,6 @@
-'use client'
-
 import { initializeApp } from "firebase/app";
-import { Auth, getAuth } from "firebase/auth";
-import { Database, getDatabase } from "firebase/database";
-import { Dispatch, SetStateAction } from "react";
+import { getAuth } from "firebase/auth";
+import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
 
@@ -26,26 +23,8 @@ console.log(process.env.FIREBASE_API);
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 // Initialize Realtime Database and get a reference to the service
-const database = getDatabase(app);
+const databasePromise = getDatabase(app);
 // Initialize authentication
-const auth = getAuth(app);
+const authPromise = getAuth(app);
 
-function RealTimeDataBase({setDatabase}:{setDatabase:Dispatch<SetStateAction<Database | null>>}) {
-
-    return (
-        <>
-            {setDatabase(database)}
-        </>
-    )
-}
-
-function Authentication({setAuth}:{setAuth:Dispatch<SetStateAction<Auth | null>>}) {
-    
-    return (
-        <>
-            {setAuth(auth)}
-        </>
-    )
-}
-
-export default RealTimeDataBase;
+export {databasePromise, authPromise};

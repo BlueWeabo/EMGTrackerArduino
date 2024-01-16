@@ -1,55 +1,26 @@
-import Image from 'next/image'
-import { initializeApp } from '@firebase/app';
-import { getDatabase } from '@firebase/database';
-import { getAuth } from '@firebase/auth';
-import Chart from "chart.js/auto";
-import { CategoryScale } from "chart.js";
-import { Dispatch, FormEvent, FormEventHandler} from "react";
-import { Line } from 'react-chartjs-2';
-import { Auth, signInWithEmailAndPassword } from 'firebase/auth';
-import Login from '@/pages/LoginForm';
-import RealTimeDataBase from '@/components/Firebase';
-import { Database } from 'firebase/database';
+'use client'
+import { useFormState } from "react-dom";
+import { loginUser } from "./actions";
 
-const firebaseConfig = {
-
-  apiKey: "AIzaSyBFqO7PLGXYErIYjDGzoRqfRpyfILvoJRo",
-
-  authDomain: "emgtrackerarduino.firebaseapp.com",
-
-  databaseURL: "https://emgtrackerarduino-default-rtdb.europe-west1.firebasedatabase.app",
-
-  projectId: "emgtrackerarduino",
-
-  storageBucket: "emgtrackerarduino.appspot.com",
-
-  messagingSenderId: "170521093559",
-
-  appId: "1:170521093559:web:2a479039c5179ae42f7432"
-
-};
-console.log(process.env.NEXT_PUBLIC_FIREBASE_API);
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// Initialize Realtime Database and get a reference to the service
-const database = getDatabase(app);
-// Initialize authentication
-const auth = getAuth(app);
-
-function Menu() {
-  return (
-    <>
-      <div>Successfully Logged In</div>
-    </>
-  )
+const initialState = {
+    message: ''
 }
-
-
-export default function Home() {
-  
-  return (
+export default function App() {
+  const [state, formAction] = useFormState(loginUser, initialState);
+    return (
     <>
-      <Login auth={auth}/>
+        <form action={formAction}>
+            <label>{state?.message}</label>
+            <div className="input-group">
+                <label htmlFor="email">Email:</label>
+                <input type="email" id="email" name="email" required />
+            </div>
+            <div className="input-group">
+                <label htmlFor="password">Password:</label>
+                <input type="password" id="password" name="password" required />
+            </div>
+            <button type="submit" >Login</button>
+        </form>
     </>
   )
 }

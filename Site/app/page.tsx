@@ -1,10 +1,22 @@
 'use client'
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import { loginUser } from "./actions";
 
 const initialState = {
     message: ''
 }
+
+function Submit() {
+    const {pending} = useFormStatus();
+    return (
+        <>
+            <button type="submit" disabled={pending}>
+                {pending ? "Loggin in..." : "Login"}
+            </button>
+        </>
+    )
+}
+
 export default function App() {
   const [state, formAction] = useFormState(loginUser, initialState);
     return (
@@ -19,7 +31,7 @@ export default function App() {
                 <label htmlFor="password">Password:</label>
                 <input type="password" id="password" name="password" required />
             </div>
-            <button type="submit" >Login</button>
+            <Submit />
         </form>
     </>
   )

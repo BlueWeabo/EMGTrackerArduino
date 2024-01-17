@@ -1,9 +1,11 @@
 'use client'
 
+import { checkAuth } from "../api/auth"
+
 export default function Patient() {
     return (
         <>
-            <div>You made it</div>
+            <div onLoad={checkAuth}>You made it</div>
         </>
     )
 }

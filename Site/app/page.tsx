@@ -1,20 +1,10 @@
 'use client'
 import { useFormState, useFormStatus } from "react-dom";
-import { loginUser } from "./actions";
+import SubmitButton from "./components/submit-button";
+import { loginUser } from "./api/login";
 
 const initialState = {
     message: ''
-}
-
-function Submit() {
-    const {pending} = useFormStatus();
-    return (
-        <>
-            <button type="submit" disabled={pending}>
-                {pending ? "Loggin in..." : "Login"}
-            </button>
-        </>
-    )
 }
 
 export default function App() {
@@ -22,7 +12,7 @@ export default function App() {
     return (
     <>
         <form action={formAction}>
-            <label>{state?.message}</label>
+            <label className={state.message}>{state?.message}</label>
             <div className="input-group">
                 <label htmlFor="email">Email:</label>
                 <input type="email" id="email" name="email" required />
@@ -31,7 +21,7 @@ export default function App() {
                 <label htmlFor="password">Password:</label>
                 <input type="password" id="password" name="password" required />
             </div>
-            <Submit />
+            <SubmitButton constantText="Login" pendingText="Logging in..." className="loginButton" />
         </form>
     </>
   )

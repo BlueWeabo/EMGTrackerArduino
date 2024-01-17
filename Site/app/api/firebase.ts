@@ -1,10 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getDatabase } from "firebase/database";
-
 const firebaseConfig = {
 
-  apiKey: "AIzaSyBFqO7PLGXYErIYjDGzoRqfRpyfILvoJRo",
+  apiKey: process.env.FIREBASE_KEY, 
 
   authDomain: "emgtrackerarduino.firebaseapp.com",
 

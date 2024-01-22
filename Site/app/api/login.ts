@@ -1,9 +1,9 @@
 'use server'
 
 import { User, signInWithEmailAndPassword } from "firebase/auth";
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import { authPromise } from "./firebase";
-import { setUser } from "./auth";
+import { cookies } from "next/headers";
 let user: User | null = null;
 let messageText: string = '';
 let redirectURL:string | null = null;
@@ -46,9 +46,16 @@ export async function loginUser(prevState:any, formData:FormData) {
       }
         messageText = reason.message;
     });
-    await setUser(user);
-    if (redirectURL !== null) {
-        redirect(redirectURL);
+    if (redirectURL !== null && user !== null) {
+        const uuid = await user.getIdToken();
+        cookies().set('session', uuid, {
+            httpOnly:true,
+            secure: process.env.NODE_ENV == 'production',
+            maxAge: 60 * 60 * 7 * 24,
+            path: '/',
+            sameSite: "strict"
+        })
+        permanentRedirect(redirectURL);
     }
     return {
         message: messageText

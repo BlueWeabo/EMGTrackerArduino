@@ -2,7 +2,7 @@
 
 import { useFormStatus } from "react-dom"
 
-export default async function SubmitButton({pendingText, constantText, className} : {pendingText: string, constantText: string, className:string}) {
+export default function SubmitButton({pendingText, constantText, className} : {pendingText: string, constantText: string, className:string}) {
     const {pending} = useFormStatus()
     return(
         <>

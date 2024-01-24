@@ -20,7 +20,6 @@ const firebaseConfig = {
   appId: "1:170521093559:web:2a479039c5179ae42f7432"
 
 };
-console.log(process.env.FIREBASE_KEY);
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 // Initialize Realtime Database and get a reference to the service

@@ -3,18 +3,14 @@ import { redirect } from "next/navigation";
 
 export const dynamic = 'force-dynamic'
 export async function GET(request: Request) {
-    return await checkAuth().then((success) => {
-        if (!success) {
-            return new Response("Not logged in!", {
-                status: 403
-            })
-        } else {
-            return new Response("Logged in", {
-                status: 200
-            })
-        }
-    })
-}
 
-export async function POST(request: Request) {
+    const logged = await checkAuth()
+    if (!logged) {
+        return new Response("Not logged in!", {
+            status: 403
+        })
+    }
+    return new Response("Logged in", {
+        status:200
+    })
 }

@@ -15,7 +15,7 @@ export async function loginUser(prevState:any, formData:FormData) {
             message: "failed-email-password"
         }
     }
-    const auth = await authPromise;
+    const auth = await authPromise();
     await signInWithEmailAndPassword(auth, email, password).then((userCred) => {
         user = userCred.user;
         if (user) {

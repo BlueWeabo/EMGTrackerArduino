@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 
 
 export async function logoutUser(prevState:any, formData: FormData) {
-    const auth = await authPromise;
+    const auth = await authPromise();
     await signOut(auth);
     cookies().set('session', "null");
     // Needed to make patient page work.

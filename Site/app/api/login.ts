@@ -55,6 +55,13 @@ export async function loginUser(prevState:any, formData:FormData) {
             path: '/',
             sameSite: "strict"
         })
+        cookies().set('user', user.email ? user.email : "", {
+            httpOnly:true,
+            secure: process.env.NODE_ENV == 'production',
+            maxAge: 60 * 60 * 7 * 24,
+            path: '/',
+            sameSite: "strict"
+        })
         permanentRedirect(redirectURL);
     }
     return {

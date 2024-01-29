@@ -1,54 +1,49 @@
-'use client'
-import { useFormState } from "react-dom";
-import { logoutUser } from "../api/logout";
+'use server'
 import NavigationBar from "../components/navigation";
-import SubmitButton from "../components/submitButton";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Chart } from "react-chartjs-2";
 import BiometricChart from "../components/biometricChart";
+import LogoutButton from "../components/logoutButton";
+import { checkAuth } from "../api/auth";
+import { redirect } from "next/navigation";
+import { onValue, ref } from "firebase/database";
+import { cookies } from "next/headers";
+import { databasePromise } from "../api/firebase";
+import { getAccountName } from "../api/emailConversion";
 
-const initialState = {
-    message: ''
-}
+const data = new Array(100);
+let unsub : Function = ()=>{};
 
-export default function Patient() {
-    const [state, formAction] = useFormState(logoutUser, initialState)
-    const [loggedIn, setState] = useState(false);
-    const router = useRouter();
-    {
-        if (!loggedIn)
-            fetch(new Request("http://localhost:3000/patient/api", {
-                method: "GET"
-            })).then((response) => {
-                if (response.status===200) {
-                    setState(true);
-                } else {
-                    router.push("/")
-                }
-            }).catch((reason)=>{
-                // F you
-            })
+async function changeBiometrics() {
+    const database = await databasePromise();
+	if (typeof unsub !== 'undefined' && unsub !== null) {
+		unsub();
+	}
+    const email = cookies().get("user")?.value;
+    if (!email) {
+        redirect("/");
     }
-    const [user, setUser] = useState<string|null>(null);
-    if (!user) {
-        fetch("http://localhost:3000/api/user", {
-            method: "GET"
-        }).then((res) => {
-            if (res.status === 200) {
-                setUser(res.headers.get("user"));
-            }
-        })
-    }
+	unsub = onValue(ref(database, `Muscle Biometrics/${ await getAccountName(email)}/Current`), (snapshot) => {
+		let dat = snapshot.val();
+		data.shift();
+		data[99] = dat;
+        console.log(data);
+	});
+};
 
+export {unsub};
+
+changeBiometrics();
+
+export default async function Patient() {
+    if (!checkAuth()) {
+        if (unsub !== null) unsub();
+        redirect("/");
+    }
     return (
         <div className="container">
             <NavigationBar>
-                <form action={formAction}>
-                    <SubmitButton className="logout" constantText="Log out" pendingText="Logging out"/>
-                </form>
+                <LogoutButton/>
             </NavigationBar>
-            <BiometricChart user={user ? user : ""}></BiometricChart>
+            <BiometricChart chartData={data}/>
         </div>
     )
-}
+};

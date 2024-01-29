@@ -21,7 +21,7 @@ export default function App() {
                 <label htmlFor="password">Password:</label>
                 <input type="password" id="password" name="password" required />
             </div>
-            <SubmitButton constantText="Login" pendingText="Logging in..." className="loginButton" />
+            <SubmitButton constantText="Login" pendingText="Logging in..." className="loginButton"/>
         </form>
     </>
   )

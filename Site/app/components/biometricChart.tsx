@@ -6,27 +6,41 @@ import {
     PointElement,
     LineElement
 } from "chart.js";
-import { Line } from "react-chartjs-2";
+import { useEffect, useState } from "react";
+import { Chart, Line } from "react-chartjs-2";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement);
-const labels = [1000].map((num, i, arr)=> i.toString());
+const labels = new Array(1000).fill(1).map((num, i, arr)=> {return i.toString()});
 const label = "Data";
-export default function BiometricChart({chartData} : { chartData:any }) {
-    const data = {
-        labels: labels,
-        datasets: [
-            {
-                label: label,
-                data: chartData,
-                backgroundColor: 'rgba(122, 122, 255, 0.8)',
-                borderColor: 'rgba(122,122,255,0.4',
-                borderWidth: 1,
-            }
-        ]
-    };
+export default function BiometricChart() {
+    const [data, setData] = useState<number[]>();
+    useEffect(() => {
+        const url = new URL("http://localhost:3000/api/chartdata");
+        fetch(url.toString())
+            .then((response) => {
+                if (response.ok) {
+                    const json = response.json();
+                    return json;
+                }
+            })
+            .then((_data) => {
+                setData(_data.data);
+            })
+    })
     return (
         <>
-            <Line data={data} height={200} width={300}></Line>
+            <Chart type="line" data={{
+                labels: labels,
+                datasets: [
+                    {
+                        data: data,
+                        backgroundColor: '#656565',
+                        borderColor: '#2323FF'
+                    }
+                ]
+            }} height={100} width={300} options={{
+                responsive: true,
+            }}></Chart>
         </>
     )
 }

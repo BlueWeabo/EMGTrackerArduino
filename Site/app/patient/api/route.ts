@@ -1,5 +1,4 @@
 import { checkAuth } from "@/app/api/auth";
-import { redirect } from "next/navigation";
 
 export const dynamic = 'force-dynamic'
 export async function GET(request: Request) {

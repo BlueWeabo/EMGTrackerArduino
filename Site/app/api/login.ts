@@ -4,6 +4,7 @@ import { User, signInWithEmailAndPassword } from "firebase/auth";
 import { permanentRedirect } from "next/navigation";
 import { authPromise } from "./firebase";
 import { cookies } from "next/headers";
+import { changeBiometrics } from "./chartDataGeneration";
 let user: User | null = null;
 let messageText: string = '';
 let redirectURL:string | null = null;
@@ -62,6 +63,7 @@ export async function loginUser(prevState:any, formData:FormData) {
             path: '/',
             sameSite: "strict"
         })
+        await changeBiometrics(user.email ? user.email : "");
         permanentRedirect(redirectURL);
     }
     return {

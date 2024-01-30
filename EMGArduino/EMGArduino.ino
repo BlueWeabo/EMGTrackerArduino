@@ -73,10 +73,15 @@ void setup() {
 boolean start = false;
 boolean done = false;
 long cycle = 0;
+int arr[1000];
+FirebaseJsonArray arra(arr);
 void loop() {
+    Firebase.getArray(fbdo, CLIENT, &arra);
+  shiftArray(&arra);
   int val = analogRead(EMGSensor);
+  arr[999] = val;
   //char thing[] = CLIENT + CURRENT;
-  Firebase.set(fbdo, CLIENT, val);
+  Firebase.set(fbdo, CLIENT, arr);
   printLocalTime();
   if (timeWeekDay == MONDAY) {
     if ((timeHour == "2" || timeHour == "10" || timeHour == "17") && !done) {
@@ -123,6 +128,14 @@ void loop() {
         Firebase.set(fbdo, SUNDAY_HOUR17 + String(cycle), val);
       }
     }
+  }
+}
+
+void shiftArray(FirebaseJsonArray *arr) {
+  for (int i = 0; i < arr->size() - 1; i++) {
+    FirebaseJsonData *dat = new FirebaseJsonData();
+    arr->get(*dat, String("/["+String(i+1)+"]"));
+    arr->set(i, dat);
   }
 }
 void printLocalTime(){

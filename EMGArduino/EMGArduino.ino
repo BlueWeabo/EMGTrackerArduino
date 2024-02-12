@@ -20,7 +20,7 @@ const char* ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 2 * 3600;
 const int daylightOffset_sec = 0;
 
-const String CLIENT = "/Muscle Biometrics/Ilia Iliev/Current";
+const String CLIENT = "/Muscle Biometrics/Ilia Iliev/Current/";
 const String MONDAY_HOUR2 = "/Muscle Biometrics/Ilia Iliev/Monday/Hour2/";
 const String MONDAY_HOUR10 = "/Muscle Biometrics/Ilia Iliev/Monday/Hour10/";
 const String MONDAY_HOUR17 = "/Muscle Biometrics/Ilia Iliev/Monday/Hour17/";
@@ -73,15 +73,11 @@ void setup() {
 boolean start = false;
 boolean done = false;
 long cycle = 0;
-int arr[1000];
-FirebaseJsonArray arra(arr);
+long index = 0;
 void loop() {
-    Firebase.getArray(fbdo, CLIENT, &arra);
-  shiftArray(&arra);
-  int val = analogRead(EMGSensor);
-  arr[999] = val;
+  float val = analogRead(EMGSensor);
   //char thing[] = CLIENT + CURRENT;
-  Firebase.set(fbdo, CLIENT, arr);
+  Firebase.set(fbdo, CLIENT + String(index), val);
   printLocalTime();
   if (timeWeekDay == MONDAY) {
     if ((timeHour == "2" || timeHour == "10" || timeHour == "17") && !done) {
@@ -129,6 +125,7 @@ void loop() {
       }
     }
   }
+  delay(10);
 }
 
 void shiftArray(FirebaseJsonArray *arr) {

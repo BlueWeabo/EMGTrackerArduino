@@ -38,14 +38,13 @@ async function getData() {
     }
     const data = await get(ref(database, `Muscle Biometrics/${await getAccountName(email)}/Current`)).then((snapshot) => {
         if (snapshot.exists()) {
-            const arr = new Array(1000);
-            arr[999] = snapshot.val();
+            const arr  = snapshot.val();
             return arr;
         } else {
-            return new Array(1000);
+            return new Array(100);
         }
     }).catch((error) => {
-        return new Array(1000);
+        return new Array(100);
     });
     return data;
 }

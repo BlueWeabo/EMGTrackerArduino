@@ -1,5 +1,5 @@
 'use client'
-import { 
+import {
     Chart as ChartJS,
     CategoryScale,
     LinearScale,
@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { Chart, Line } from "react-chartjs-2";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement);
-const labels = new Array(1000).fill(1).map((num, i, arr)=> {return i.toString()});
+const labels = new Array(100).fill(1).map((num, i, arr) => { return i.toString() });
 const label = "Data";
 export default function BiometricChart() {
     const [data, setData] = useState<number[]>();
@@ -34,8 +34,8 @@ export default function BiometricChart() {
                 datasets: [
                     {
                         data: data,
-                        backgroundColor: '#656565',
-                        borderColor: '#2323FF'
+                        backgroundColor: "rgba(75, 192, 192,0.4)",
+                        borderColor: "rgba(75, 192, 192, 1)"
                     }
                 ]
             }} height={100} width={300} options={{

@@ -4,7 +4,7 @@ import BiometricChartDoc from "../components/biometricChartDoc";
 import LogoutButton from "../components/logoutButton";
 import NavigationBar from "../components/navigation";
 import { useState } from "react";
-import { register } from "../api/registerPatient/route";
+import { register } from "../api/registerPatient/register";
 import SubmitButton from "../components/submitButton";
 const initialState = {
     message: "",

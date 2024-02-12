@@ -1,3 +1,5 @@
+import "./global.css"
+
 export const metadata = {
   title: 'Medical Diary for Muscle Activity',
 }

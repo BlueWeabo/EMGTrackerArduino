@@ -49,4 +49,19 @@ async function getData() {
     return data;
 }
 
-export {unsub, changeBiometrics, getData};
+async function getDataDoc(patient:string) {
+    const database = await databasePromise();
+    const data = await get(ref(database, `Muscle Biometrics/${await getAccountName(patient)}/Current`)).then((snapshot) => {
+        if (snapshot.exists()) {
+            const arr  = snapshot.val();
+            return arr;
+        } else {
+            return new Array(100);
+        }
+    }).catch((error) => {
+        return new Array(100);
+    });
+    return data;
+}
+
+export {unsub, changeBiometrics, getData, getDataDoc};

@@ -8,8 +8,8 @@ export default function LogoutButton() {
     const [state, formAction] = useFormState(logoutUser, {message: ""});
     return (
         <>
-            <form action={formAction}>
-                <SubmitButton className="logout" constantText="Log out" pendingText="Logging out"/>
+            <form action={formAction} className="tab">
+                <SubmitButton className="logoutButton" constantText="Log out" pendingText="Logging out"/>
             </form>
         </>
     )

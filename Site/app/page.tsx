@@ -10,8 +10,9 @@ const initialState = {
 export default function App() {
   const [state, formAction] = useFormState(loginUser, initialState);
     return (
-    <>
-        <form action={formAction}>
+    <div className="containerR">
+        <form action={formAction} className="loginContainer">
+            <h2>Login</h2>
             <label className={state.message}>{state?.message}</label>
             <div className="input-group">
                 <label htmlFor="email">Email:</label>
@@ -23,6 +24,6 @@ export default function App() {
             </div>
             <SubmitButton constantText="Login" pendingText="Logging in..." className="loginButton"/>
         </form>
-    </>
+    </div>
   )
 }

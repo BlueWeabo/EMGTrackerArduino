@@ -12,11 +12,13 @@ export default async function Patient() {
         redirect("/");
     }
     return (
-        <div className="container">
+        <div>
             <NavigationBar>
                 <LogoutButton/>
             </NavigationBar>
-            <BiometricChart />
+            <div className="genericContainer">
+                <BiometricChart />
+            </div>
         </div>
     )
 };

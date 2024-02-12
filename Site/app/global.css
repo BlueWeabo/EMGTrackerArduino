@@ -1,0 +1,105 @@
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 242, 242, 242;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+    background-color: rgb(var(--background-start-rgb));
+    font-family: Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.containerR {
+    width: 100%;
+    min-height:  100vh;
+    display:grid;
+}
+
+.loginContainer {
+    background-color: rgb(var(--background-end-rgb));
+    padding: 40px;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    place-self: center;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+button {
+    width: 100%;
+    background-color: #4caf50;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.loginContainer h2 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #333;
+}
+
+.loginContainer a {
+    color: #4caf50;
+    text-decoration: none;
+    font-weight: bold;
+}
+.error-message {
+    color: #ff0000;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.genericContainer {
+    width: 95%;
+    margin: auto;
+}
+
+.tabs {
+    display:flex;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.tab {
+    flex-grow: 1;
+    flex-basis: 50%;
+}

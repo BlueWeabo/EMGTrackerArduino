@@ -1,11 +1,17 @@
-'use client'
+"use server"
 
-import { checkAuth } from "../api/auth"
+import NavigationBar from "../components/navigation";
+import LogoutButton from "../components/logoutButton";
+import AdminForm from "../components/adminForm";
 
-export default function Patient() {
+const initialState = { message: "" };
+export default async function Admin() {
     return (
         <>
-            <div onLoad={checkAuth}>You made it</div>
+            <NavigationBar>
+                <LogoutButton />
+            </NavigationBar>
+            <AdminForm />
         </>
     )
 }

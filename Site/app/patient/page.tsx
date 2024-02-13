@@ -8,7 +8,6 @@ import { unsub } from "../api/chartDataGeneration";
 
 export default async function Patient() {
     if (!checkAuth()) {
-        unsub();
         redirect("/");
     }
     return (

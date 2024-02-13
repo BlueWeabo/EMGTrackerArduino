@@ -16,6 +16,7 @@ export default async function Patient() {
                 <LogoutButton/>
             </NavigationBar>
             <div className="genericContainer">
+                
                 <BiometricChart />
             </div>
         </div>

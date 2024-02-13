@@ -4,14 +4,6 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
 body {
   color: rgb(var(--foreground-rgb));
     background-color: rgb(var(--background-start-rgb));
@@ -23,7 +15,7 @@ body {
 }
 
 input {
-    width: calc(100% - 22px);
+    width: 100%;
     padding: 10px;
     margin-top: 5px;
     border: 1px solid #ccc;

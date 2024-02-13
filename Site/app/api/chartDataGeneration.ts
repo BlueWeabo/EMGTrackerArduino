@@ -27,7 +27,6 @@ async function changeBiometrics(email:string) {
 async function setData(_data:number) {
     data.shift();
     data[999] = _data;
-    console.log(data);
 }
 
 async function getData() {

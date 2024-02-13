@@ -1,13 +1,14 @@
 "use client"
+import { useState } from "react";
 import LogoutButton from "../components/logoutButton";
 import NavigationBar from "../components/navigation";
 import DoctorForm from "../components/doctorForm";
 import DoctorSearch from "../components/doctorSearch";
 
-let searchOrNew = false;
-export default async function Doctor() {
+export default function Doctor() {
+    const [searchOrNew, setSearchOrNew] = useState(false);
     function onClick() {
-        searchOrNew = !searchOrNew;
+        setSearchOrNew(!searchOrNew);
     }
 
     return (

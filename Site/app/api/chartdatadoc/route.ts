@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 
 export async function GET(request: NextRequest) {
     const cookie = cookies().get("docSearch")?.value;
-    console.log(cookie);
     if (!cookie) {
         return NextResponse.json({
             body: JSON.stringify(new Array<number>(100)),

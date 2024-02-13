@@ -12,6 +12,5 @@ export async function POST(request: NextRequest) {
         path: '/',
         sameSite: "strict"
     });
-    console.log(search);
     return new NextResponse();
 }

@@ -1,15 +1,8 @@
 'use client'
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement
-} from "chart.js";
+import "chart.js/auto";
 import { useEffect, useState } from "react";
 import { Chart, Line } from "react-chartjs-2";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement);
 const labels = new Array(100).fill(1).map((num, i, arr) => { return i.toString() });
 const label = "Data";
 export default function BiometricChartDoc() {

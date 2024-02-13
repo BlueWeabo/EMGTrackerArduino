@@ -19,12 +19,10 @@ async function register(prevState: any, formData: FormData) {
 	}
     const database = await databasePromise();
     const auth = await authPromise()
-    console.log(`${email} ${pass}`);
     const accName = await getAccountName(email)
 	const mess = await createUserWithEmailAndPassword(auth, email, pass).then((userCredential) => {
 		const user = userCredential.user;
         if (user)
-        console.log("success")
 		set(ref(database, 'Muscle Biometrics/' + accName), {
 			Current: [1,2,3,4,5,6,7,8,9],
 			Monday: {

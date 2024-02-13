@@ -95,3 +95,11 @@ button:hover {
     flex-grow: 1;
     flex-basis: 50%;
 }
+
+.centerDiv {
+    display: grid;
+}
+
+.centerElement {
+    place-self: center;
+}

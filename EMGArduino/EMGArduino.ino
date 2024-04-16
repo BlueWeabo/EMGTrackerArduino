@@ -1,8 +1,8 @@
 #include <WiFi.h>
 #include <Firebase.h>
 #include "time.h"
-#define WIFI_NAME "Redmi 9A"
-#define WIFI_PASSWORD "42315678"
+#define WIFI_NAME "BW"
+#define WIFI_PASSWORD "123456789"
 #define DATABASE_URL "https://emgtrackerarduino-default-rtdb.europe-west1.firebasedatabase.app/"
 #define DATABASE_SECRET "OAUHcMrInFfygL6UHISgzwd4bsOajW7XYepeNfWR"
 #define MONDAY "Monday"
@@ -69,15 +69,17 @@ void setup() {
   struct tm* t = localtime(&now);
   Serial.println(t, "%A, %B %d %Y %H:%M:%S");
   printLocalTime();
+  Firebase.set(fbdo, CLIENT, 0);
 }
 boolean start = false;
 boolean done = false;
 long cycle = 0;
-long index = 0;
+long indexs = 0;
 void loop() {
   float val = analogRead(EMGSensor);
   //char thing[] = CLIENT + CURRENT;
-  Firebase.set(fbdo, CLIENT + String(index), val);
+  Firebase.set(fbdo, CLIENT + String(indexs), val);
+  indexs++;
   printLocalTime();
   if (timeWeekDay == MONDAY) {
     if ((timeHour == "2" || timeHour == "10" || timeHour == "17") && !done) {
@@ -125,16 +127,9 @@ void loop() {
       }
     }
   }
-  delay(10);
+  delay(1);
 }
 
-void shiftArray(FirebaseJsonArray *arr) {
-  for (int i = 0; i < arr->size() - 1; i++) {
-    FirebaseJsonData *dat = new FirebaseJsonData();
-    arr->get(*dat, String("/["+String(i+1)+"]"));
-    arr->set(i, dat);
-  }
-}
 void printLocalTime(){
   struct tm timeinfo;
   if(!getLocalTime(&timeinfo)){

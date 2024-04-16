@@ -3,8 +3,7 @@ import "chart.js/auto";
 import { useEffect, useState } from "react";
 import { Chart } from "react-chartjs-2";
 
-const labels = new Array(100).fill(1).map((num, i, arr) => { return i.toString() });
-const label = "Data";
+const labels = new Array(300).fill(1).map((_, i, __) => { return i.toString() });
 export default function BiometricChart() {
     const [data, setData] = useState<number[]>();
     useEffect(() => {
@@ -19,7 +18,7 @@ export default function BiometricChart() {
             .then((_data) => {
                 setData(_data.data);
             })
-    })
+    });
     return (
         <>
             <Chart type="line" data={{

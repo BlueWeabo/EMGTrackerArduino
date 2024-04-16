@@ -3,7 +3,7 @@ import "chart.js/auto";
 import { useEffect, useState } from "react";
 import { Chart, Line } from "react-chartjs-2";
 
-const labels = new Array(100).fill(1).map((num, i, arr) => { return i.toString() });
+const labels = new Array(300).fill(1).map((num, i, arr) => { return i.toString() });
 const label = "Data";
 export default function BiometricChartDoc() {
     const [data, setData] = useState<number[]>();

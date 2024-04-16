@@ -37,7 +37,7 @@ async function getData() {
     }
     const data = await get(ref(database, `Muscle Biometrics/${await getAccountName(email)}/Current`)).then((snapshot) => {
         if (snapshot.exists()) {
-            const arr  = snapshot.val();
+            const arr  = snapshot.val().slice(-300);
             return arr;
         } else {
             return new Array(100);
